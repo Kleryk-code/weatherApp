@@ -1,38 +1,7 @@
 import React from 'react';
-import OpenweathermapApi from '../../openweathermapApi/openweathermapApi'
 
-class SearchForm extends React.Component {
-/*      constructor(props) {
-      super(props);
-      this.state = {
-        searchRequest: '',
-        id: null,
-        cityName: '',
-        temp: null        
-      };
 
-      this.onChangeSearch = this.onChangeSearch.bind(this);
-      this.onSubmit = this.onSubmit.bind(this)
-    }
-
-    weatherApi = new OpenweathermapApi();
-
-    onSubmit(event) {
-      this.weatherApi.getCityData(this.state.searchRequest)
-        .then(data => this.setState({
-          id: data.id,
-          cityName: data.name,
-          temp: data.temp
-        }));
-      
-      event.preventDefault();
-    }
-    
-    onChangeSearch(event) {
-      this.setState({searchRequest: event.target.value})
-      
-    } */
-    
+class SearchForm extends React.Component { 
 
     render() {
       return (

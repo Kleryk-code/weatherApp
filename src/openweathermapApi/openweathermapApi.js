@@ -3,9 +3,7 @@ export default class OpenweathermapApi {
     _apiBase = 'https://api.openweathermap.org/data/2.5/weather?q=';
     _apiKey = 'b223100244007ae7859a71e52eeea4c1';
 
-    //api.openweathermap.org/data/2.5/weather?q=moscow&appid=b223100244007ae7859a71e52eeea4c1
-    //`${this._apiBase}${this.cityName}&appid=${this._apiKey}`
-
+    
     async getResource(cityName) {
       const res = await fetch(`${this._apiBase}${cityName}&units=metric&appid=${this._apiKey}`);
   
@@ -21,7 +19,7 @@ export default class OpenweathermapApi {
         const data = {
             id: res.id,
             name: res.name,
-            temp: res.main.temp
+            temp: Math.round(res.main.temp)
         }    
         return data;
     }

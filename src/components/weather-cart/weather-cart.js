@@ -1,20 +1,35 @@
 import React from 'react';
-
+import {AddButton, DeleteButton, InactiveButton} from './addFavoriteButton/addFavoriteButton'
 class WeatherCart extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {city: 'Moscow', temperature: 17}
-  }
     
     render() {
+
+      const {cityName, temp} = this.props.state.currentCity; 
+      const {addButtonStatus, currentCity} = this.props.state;
+      const favoriteList = this.props.state.favoriteList;
+
+      let button;
+      switch(addButtonStatus) {
+        case 'ACTIVE':
+          button = <AddButton addItem = {this.props.addItem}
+          currentCity = {currentCity}/>;
+          break;
+        case 'DELETE':
+          button = <DeleteButton deleteItem = {this.props.deleteItem}
+          favoriteList = {favoriteList} />
+          break;
+        default:
+          button = <InactiveButton /> 
+      }
+
       return (
         <div>
           <div>
-            <p>City: {this.state.city}, Temp: {this.state.temperature}</p>
+            <p>City: {cityName} {temp}</p>
           </div>
 
           <div>
-            <button>Add favorite City</button>
+            {button}
           </div>
         </div>
       );
