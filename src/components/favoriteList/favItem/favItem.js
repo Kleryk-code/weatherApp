@@ -7,7 +7,7 @@ function FavItem(props) {
   
   return (
     <li 
-        //Не понятно как  пробрасывается ID вверх по клику на элемент  
+        //Не понятно как  пробрасывается cityName вверх по клику на элемент  
         onClick = {() => {props.changeActivCity(cityName)}} >
       {cityName} {temp}
     </li>
