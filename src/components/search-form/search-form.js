@@ -1,7 +1,7 @@
 import React from 'react';
 
 
-class SearchForm extends React.Component { 
+/* class SearchForm extends React.Component { 
 
     render() {
       return (
@@ -18,7 +18,26 @@ class SearchForm extends React.Component {
         </div>
       );
     }
-  }
+  } */
+
+
+function SearchForm(props) {
+
+  return (
+    <div>
+      <form onSubmit = {props.onSubmit}>
+        <label> Search: 
+          <input type="text" name="search" 
+                value = {props.searchRequest}
+                onChange = {props.onChangeSearch}
+                placeholder="City"/>
+          <button type='submit'>Search</button>
+        </label>
+      </form>
+    </div>
+  );
+}
+
 
 
   export default SearchForm;

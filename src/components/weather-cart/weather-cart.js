@@ -1,6 +1,7 @@
 import React from 'react';
 import {AddButton, DeleteButton, InactiveButton} from './addFavoriteButton/addFavoriteButton'
-class WeatherCart extends React.Component {
+
+/* class WeatherCart extends React.Component {
     
     render() {
 
@@ -34,6 +35,41 @@ class WeatherCart extends React.Component {
         </div>
       );
     }
+  } */
+
+
+  function WeatherCart(props) {
+    
+    const {cityName, temp} = props.currentCity; 
+    const {addButtonStatus, currentCity} = props;
+    const favoriteList = props.favoriteList;
+
+    let button;
+    switch(addButtonStatus) {
+      case 'ACTIVE':
+        button = <AddButton addItem = {props.addItem}
+        currentCity = {currentCity}/>;
+        break;
+      case 'DELETE':
+        button = <DeleteButton deleteItem = {props.deleteItem}
+        favoriteList = {favoriteList} />
+        break;
+      default:
+        button = <InactiveButton /> 
+    }
+
+
+    return (
+      <div>
+        <div>
+          <p>City: {cityName} {temp}</p>
+        </div>
+
+      <div>
+        {button}
+      </div>
+    </div>
+    )
   }
 
   export default WeatherCart;
