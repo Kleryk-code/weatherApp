@@ -169,7 +169,7 @@ function componentDidUpdate(nextProps, nextState) {
 } */
 
 
-function App() {
+const App = () => {
 
   const [searchRequest, setSearchRequest] = useState('');
   const [addButtonStatus, setAddButtonStatus] = useState('PASSIVE');
@@ -178,33 +178,32 @@ function App() {
       cityName: '',
       temp: null
     });
-  const [favoriteList, setFavoriteList] = useState([]);
 
-/*   useEffect(() => {
-    console.log(favoriteList);
-    localStorage.getItem('favoriteList') && setFavoriteList({
-      favoriteList: JSON.parse(localStorage.getItem('favoriteList'))
-    })
-  }, []) */
-
+  const [favoriteList, setFavoriteList] = useState(() => {
+    const setFavoriteListData = localStorage.getItem('favoriteList');
+    return setFavoriteListData !==null 
+      ? JSON.parse(setFavoriteListData)
+      : [];
+  });
 
   useEffect(() => {
-    localStorage.setItem('favoriteList', JSON.stringify({favoriteList}))
-  })
+    localStorage.setItem('favoriteList', JSON.stringify(favoriteList))
+  }, [favoriteList]);
 
 
 
-  function createFavItem (cityData) {
+  const createFavItem = (cityData) => {
     return {
       id: cityData.id,
       cityName: cityData.cityName,
       temp: cityData.temp,
     }
-  }
+  };
 
   const weatherApi = new OpenweathermapApi();
     
-  function onSubmit(event) {
+/*   const onSubmit = (event) => {
+    event.preventDefault();
     weatherApi.getCityData(searchRequest)
       .then(data => setCurrentCity({   
         ...currentCity,
@@ -214,67 +213,78 @@ function App() {
         })
       )
       .then(setAddButtonStatus('ACTIVE'))
-        
+  } */
+
+
+  const onSubmit = async (event) => {
     event.preventDefault();
+    const data = await weatherApi.getCityData(searchRequest);
+    setCurrentCity({   
+        ...currentCity,
+          id: data.id,
+          cityName: data.name,
+          temp: data.temp
+        })
+    setAddButtonStatus('ACTIVE')
   }
 
-  function onChangeSearch(event) {
+  const onChangeSearch = (event) => {
     setSearchRequest(event.target.value)
-}
+  }
 
-  function changeActivCity(cityName) {
-    weatherApi.getCityData(cityName)
-    .then(data => setCurrentCity({   
+  const changeActivCity =async (cityName) => {
+    const data = await weatherApi.getCityData(cityName);
+    setCurrentCity({   
       ...currentCity,
         id: data.id,
         cityName: data.name,
         temp: data.temp
       })
-    )
-    .then(setAddButtonStatus('DELETE'))
+    setAddButtonStatus('DELETE')
   }
 
 
-  function isDublicate (firstArr, secondArr) {
-    let dublicate;
-    if (firstArr) {
-      dublicate = firstArr.some(item => item.id === secondArr.id)
-      return dublicate;
-    }
+
+  const isDublicate = (elementList, checkedItem) => {
+    return elementList.find(item => item.id === checkedItem.id)
   }
 
-  function addItem(cityData, favData) {
-    
+  
+  const addItem = (cityData, favData) => {
     cityData = currentCity;
     favData = favoriteList;
     
     if (cityData.id === null || isDublicate(favData, cityData)) {
+      setAddButtonStatus('PASSIVE');
       return
     } else {
       const newItem = createFavItem(cityData)
       setFavoriteList(() => {
           const newArr = [...favData, newItem]
-          console.log(newArr);
           return newArr; 
       })
       setAddButtonStatus('PASSIVE');
     }
-  }
+  } 
 
-  function deleteItem() {
+/*   const deleteItem = () => {
     setFavoriteList((favoriteList) => {
-      
         const idx = favoriteList.findIndex((el) => el.id === currentCity.id);
-        console.log(idx);
         const newArray = [
             ...favoriteList.slice(0, idx),
             ...favoriteList.slice(idx + 1)
             ]
         return newArray
     })
+  } */
+
+
+  const deleteItem = () => {
+    setFavoriteList((favoriteList) => {
+      return favoriteList.filter(favoriteItem => favoriteItem.id !== currentCity.id)
+    });
+    setAddButtonStatus('PASSIVE');
   }
-
-
 
 
 
@@ -295,7 +305,7 @@ function App() {
             //addFavItem = {addFavItem}
             deleteItem ={deleteItem} 
         />
-        <FavoriteList 
+         <FavoriteList 
             favoriteList = {favoriteList}
             changeActivCity = {changeActivCity}
         />

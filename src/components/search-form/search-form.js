@@ -1,35 +1,15 @@
 import React from 'react';
 
-
-/* class SearchForm extends React.Component { 
-
-    render() {
-      return (
-        <div>
-          <form onSubmit = {this.props.onSubmit}>
-            <label> Search: 
-              <input type="text" name="search" 
-                    value = {this.props.state.searchRequest}
-                    onChange = {this.props.onChangeSearch}
-                    placeholder="City"/>
-              <button type='submit'>Search</button>
-            </label>
-          </form>
-        </div>
-      );
-    }
-  } */
-
-
-function SearchForm(props) {
+const SearchForm = (props) => {
+  const {onSubmit, searchRequest, onChangeSearch} = props; 
 
   return (
     <div>
-      <form onSubmit = {props.onSubmit}>
+      <form onSubmit = {onSubmit}>
         <label> Search: 
           <input type="text" name="search" 
-                value = {props.searchRequest}
-                onChange = {props.onChangeSearch}
+                value = {searchRequest}
+                onChange = {onChangeSearch}
                 placeholder="City"/>
           <button type='submit'>Search</button>
         </label>
@@ -40,4 +20,4 @@ function SearchForm(props) {
 
 
 
-  export default SearchForm;
+export default SearchForm;

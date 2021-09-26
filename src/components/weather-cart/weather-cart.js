@@ -1,63 +1,23 @@
 import React from 'react';
 import {AddButton, DeleteButton, InactiveButton} from './addFavoriteButton/addFavoriteButton'
 
-/* class WeatherCart extends React.Component {
-    
-    render() {
-
-      const {cityName, temp} = this.props.state.currentCity; 
-      const {addButtonStatus, currentCity} = this.props.state;
-      const favoriteList = this.props.state.favoriteList;
-
-      let button;
-      switch(addButtonStatus) {
-        case 'ACTIVE':
-          button = <AddButton addItem = {this.props.addItem}
-          currentCity = {currentCity}/>;
-          break;
-        case 'DELETE':
-          button = <DeleteButton deleteItem = {this.props.deleteItem}
-          favoriteList = {favoriteList} />
-          break;
-        default:
-          button = <InactiveButton /> 
-      }
-
-      return (
-        <div>
-          <div>
-            <p>City: {cityName} {temp}</p>
-          </div>
-
-          <div>
-            {button}
-          </div>
-        </div>
-      );
-    }
-  } */
-
-
-  function WeatherCart(props) {
-    
+  
+  const WeatherCart = (props) => {
     const {cityName, temp} = props.currentCity; 
-    const {addButtonStatus, currentCity} = props;
-    const favoriteList = props.favoriteList;
-
+    const {addButtonStatus, currentCity, addItem, deleteItem} = props;
     let button;
+
     switch(addButtonStatus) {
       case 'ACTIVE':
-        button = <AddButton addItem = {props.addItem}
-        currentCity = {currentCity}/>;
+        button = <AddButton addItem = {addItem}
+        currentCity = {currentCity} />;
         break;
       case 'DELETE':
-        button = <DeleteButton deleteItem = {props.deleteItem}
-        favoriteList = {favoriteList} />
+        button = <DeleteButton deleteItem = {deleteItem} />
         break;
       default:
         button = <InactiveButton /> 
     }
-
 
     return (
       <div>
@@ -65,10 +25,10 @@ import {AddButton, DeleteButton, InactiveButton} from './addFavoriteButton/addFa
           <p>City: {cityName} {temp}</p>
         </div>
 
-      <div>
-        {button}
+        <div>
+          {button}
+        </div>
       </div>
-    </div>
     )
   }
 

@@ -1,13 +1,12 @@
 import React from 'react';
 
 
-function FavItem(props) {
-  
+
+const FavItem = (props) => {
   const {cityName, temp} = props;
   
   return (
-    <li 
-        //Не понятно как  пробрасывается cityName вверх по клику на элемент  
+    <li   
         onClick = {() => {props.changeActivCity(cityName)}} >
       {cityName} {temp}
     </li>
