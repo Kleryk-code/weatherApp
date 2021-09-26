@@ -1,4 +1,5 @@
 import React from 'react';
+import { useState, useEffect } from 'react';
 import './app.css';
 import SearchForm from '../search-form';
 import WeatherCart from '../weather-cart/weather-cart';
@@ -6,7 +7,7 @@ import FavoriteList from '../favoriteList/favoriteList'
 import OpenweathermapApi from '../../openweathermapApi/openweathermapApi';
 
 
-export default class App extends React.Component {
+/* export default class App extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -110,22 +111,6 @@ export default class App extends React.Component {
     })
 }
 
-/* deleteItem = (id) => {
-    
-  this.setState(({favoriteList}) => {
-      const idx = favoriteList.findIndex((el) => el.id === id)
-      console.log(idx);
-      const newArray = [
-          ...favoriteList.slice(0, idx),
-          ...favoriteList.slice(idx + 1)
-          ]
-      return {
-          favoriteList: newArray
-      }
-  })
-
-} */
-
   addFavItem = () => {
     debugger
     if (this.state.addButtonStatus === 'ACTIVE') {
@@ -167,5 +152,165 @@ export default class App extends React.Component {
             </div>
         );
     }
-};
+}; */
 
+
+
+
+/* function componentWillMount() {
+  //Не доконца понимаю как работает &&
+  localStorage.getItem('favoriteList') && setState({
+    favoriteList: JSON.parse(localStorage.getItem('favoriteList'))
+  })
+}
+
+function componentDidUpdate(nextProps, nextState) {
+  localStorage.setItem('favoriteList', JSON.stringify(nextState.favoriteList))
+} */
+
+
+const App = () => {
+
+  const [searchRequest, setSearchRequest] = useState('');
+  const [addButtonStatus, setAddButtonStatus] = useState('PASSIVE');
+  const [currentCity, setCurrentCity] = useState({
+      id: null,
+      cityName: '',
+      temp: null
+    });
+
+  const [favoriteList, setFavoriteList] = useState(() => {
+    const setFavoriteListData = localStorage.getItem('favoriteList');
+    return setFavoriteListData !==null 
+      ? JSON.parse(setFavoriteListData)
+      : [];
+  });
+
+  useEffect(() => {
+    localStorage.setItem('favoriteList', JSON.stringify(favoriteList))
+  }, [favoriteList]);
+
+
+
+  const createFavItem = (cityData) => {
+    return {
+      id: cityData.id,
+      cityName: cityData.cityName,
+      temp: cityData.temp,
+    }
+  };
+
+  const weatherApi = new OpenweathermapApi();
+    
+/*   const onSubmit = (event) => {
+    event.preventDefault();
+    weatherApi.getCityData(searchRequest)
+      .then(data => setCurrentCity({   
+        ...currentCity,
+          id: data.id,
+          cityName: data.name,
+          temp: data.temp
+        })
+      )
+      .then(setAddButtonStatus('ACTIVE'))
+  } */
+
+
+  const onSubmit = async (event) => {
+    event.preventDefault();
+    const data = await weatherApi.getCityData(searchRequest);
+    setCurrentCity({   
+        ...currentCity,
+          id: data.id,
+          cityName: data.name,
+          temp: data.temp
+        })
+    setAddButtonStatus('ACTIVE')
+  }
+
+  const onChangeSearch = (event) => {
+    setSearchRequest(event.target.value)
+  }
+
+  const changeActivCity =async (cityName) => {
+    const data = await weatherApi.getCityData(cityName);
+    setCurrentCity({   
+      ...currentCity,
+        id: data.id,
+        cityName: data.name,
+        temp: data.temp
+      })
+    setAddButtonStatus('DELETE')
+  }
+
+
+
+  const isDublicate = (elementList, checkedItem) => {
+    return elementList.find(item => item.id === checkedItem.id)
+  }
+
+  
+  const addItem = (cityData, favData) => {
+    cityData = currentCity;
+    favData = favoriteList;
+    
+    if (cityData.id === null || isDublicate(favData, cityData)) {
+      setAddButtonStatus('PASSIVE');
+      return
+    } else {
+      const newItem = createFavItem(cityData)
+      setFavoriteList(() => {
+          const newArr = [...favData, newItem]
+          return newArr; 
+      })
+      setAddButtonStatus('PASSIVE');
+    }
+  } 
+
+/*   const deleteItem = () => {
+    setFavoriteList((favoriteList) => {
+        const idx = favoriteList.findIndex((el) => el.id === currentCity.id);
+        const newArray = [
+            ...favoriteList.slice(0, idx),
+            ...favoriteList.slice(idx + 1)
+            ]
+        return newArray
+    })
+  } */
+
+
+  const deleteItem = () => {
+    setFavoriteList((favoriteList) => {
+      return favoriteList.filter(favoriteItem => favoriteItem.id !== currentCity.id)
+    });
+    setAddButtonStatus('PASSIVE');
+  }
+
+
+
+  return (
+    <div>
+        <h2>Weather</h2>
+        <SearchForm 
+            onSubmit = {onSubmit}
+            onChangeSearch = {onChangeSearch}
+            searchRequest = {searchRequest}
+        />
+        <WeatherCart 
+            //state = {this.state}
+            currentCity = {currentCity}
+            addButtonStatus = {addButtonStatus}
+            favoriteList = {favoriteList}
+            addItem = {addItem}
+            //addFavItem = {addFavItem}
+            deleteItem ={deleteItem} 
+        />
+         <FavoriteList 
+            favoriteList = {favoriteList}
+            changeActivCity = {changeActivCity}
+        />
+    </div>
+  )
+}
+
+export default App;

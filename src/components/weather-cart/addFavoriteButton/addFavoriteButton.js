@@ -1,26 +1,28 @@
 import React from 'react';
 
-function AddButton(props) {
+const AddButton = (props) => {
+  const {addItem} = props;
   return (
     <button  
       style={{backgroundColor: 'green'}}
-      onClick = {props.addItem}>
+      onClick = {addItem}>
         Add City
     </button>
   );
 }
 
-function DeleteButton(props) {
+const DeleteButton = (props) => {
+  const {deleteItem} = props;
   return (
     <button 
       style={{backgroundColor: 'red'}}
-      onClick={props.deleteItem}>
+      onClick={deleteItem}>
         Delete City
     </button>
   );
 }
 
-function InactiveButton() {
+const InactiveButton = () => {
   return (
     <button style={{backgroundColor: 'gray'}} >
       Turn City

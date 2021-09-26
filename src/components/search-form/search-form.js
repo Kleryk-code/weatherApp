@@ -1,24 +1,23 @@
 import React from 'react';
 
+const SearchForm = (props) => {
+  const {onSubmit, searchRequest, onChangeSearch} = props; 
 
-class SearchForm extends React.Component { 
-
-    render() {
-      return (
-        <div>
-          <form onSubmit = {this.props.onSubmit}>
-            <label> Search: 
-              <input type="text" name="search" 
-                    value = {this.props.state.searchRequest}
-                    onChange = {this.props.onChangeSearch}
-                    placeholder="City"/>
-              <button type='submit'>Search</button>
-            </label>
-          </form>
-        </div>
-      );
-    }
-  }
+  return (
+    <div>
+      <form onSubmit = {onSubmit}>
+        <label> Search: 
+          <input type="text" name="search" 
+                value = {searchRequest}
+                onChange = {onChangeSearch}
+                placeholder="City"/>
+          <button type='submit'>Search</button>
+        </label>
+      </form>
+    </div>
+  );
+}
 
 
-  export default SearchForm;
+
+export default SearchForm;
